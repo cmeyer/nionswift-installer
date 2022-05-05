@@ -1,0 +1,57 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # installer is always built with a specific version of Python
+        os: [ubuntu-20.04]
+        python-version: [3.8]
+
+    env:
+      # define environment and configuration variables here.
+      # app_name is how the application will be named on the disk image.
+      # product_name is the name of the disk image (.dmg) that gets built.
+      # qt_version, qt_platform specify which version of Qt to use.
+      # these should be regularly updated to the latest usable version.
+      # python_version specifies which version of Python to use.
+      # this should be regularly updated to the latest usable version.
+      app_name: "Nion Swift 0.16"
+      product_name: NionSwift-0.16.2
+      qt_version: 5.15.2
+      qt_platform: clang_64
+      python_version: 3.9.9
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # first set up Python
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+      if: false
+    - name: Display Python version
+      run: python -c "import sys; print(sys.version)"
+
+    # next build the installer (it's a disk image with the application).
+    - name: Build
+      run: |
+        wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+        chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+        linuxdeployqt-continuous-x86_64.AppImage nionswift_appimage.yml
+    # finally, upload the artifacts of the build so they are available on the GitHub action page.
+    - name: Upload Product DMG
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.product_name }}.dmg
+        path: ${{ env.product_name }}.dmg
+      if: false
