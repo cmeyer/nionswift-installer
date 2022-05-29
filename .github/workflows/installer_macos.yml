@@ -14,7 +14,7 @@ jobs:
       matrix:
         # installer is always built with a specific version of Python
         os: [macos-10.15]
-        python-version: [3.9]
+        python-version: ["3.10"]
 
     env:
       # define environment and configuration variables here.
@@ -25,10 +25,10 @@ jobs:
       # python_version specifies which version of Python to use.
       # this should be regularly updated to the latest usable version.
       app_name: "Nion Swift 0.16"
-      product_name: NionSwift-0.16.2
+      product_name: NionSwift-0.16.3
       qt_version: 5.15.2
       qt_platform: clang_64
-      python_version: 3.9.9
+      python_version: 3.10.4
 
     steps:
     - uses: actions/checkout@v2
@@ -87,7 +87,7 @@ jobs:
         python mac_fix_framework.py Python.framework/
         rm -rf "dist/$app_name.app/Contents/Frameworks/Python.framework"
         cp -R Python.framework "dist/$app_name.app/Contents/Frameworks/"
-        python3.9 -m venv python-nionswift
+        python3.10 -m venv python-nionswift
         source python-nionswift/bin/activate
 
         # install latest version of nionswift (UNUSED EXCEPT FOR DEBUGGING)
@@ -117,8 +117,8 @@ jobs:
 
         # configure the environment by copying site-packages, the toolconfig.toml file, application icon,
         # and splash screen.
-        mkdir -p "dist/$app_name.app/Contents/MacOS/python-nionswift/lib/python3.9"
-        cp -R python-nionswift/lib/python3.9/site-packages "dist/$app_name.app/Contents/MacOS/python-nionswift/lib/python3.9"
+        mkdir -p "dist/$app_name.app/Contents/MacOS/python-nionswift/lib/python3.10"
+        cp -R python-nionswift/lib/python3.10/site-packages "dist/$app_name.app/Contents/MacOS/python-nionswift/lib/python3.10"
         cp mac_toolconfig.toml "dist/$app_name.app/Contents/MacOS/toolconfig.toml"
         cp "nionswift-tool/launcher/Graphics/MacIcon.icns" "dist/$app_name.app/Contents/Resources/"
         cp "nionswift-tool/launcher/Artwork/splash_600x400.png" "dist/$app_name.app/Contents/Resources/splash.png"
